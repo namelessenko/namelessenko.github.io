@@ -5,9 +5,9 @@
   <meta name="viewport" content="width=device-width">
   <title>namelessenko</title>
   <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
-  <script id="MathJax-script" async
-	  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
-  </script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script type="module" src="https://md-block.verou.me/md-block.js"></script>
+  <link href="prism-2.css" rel="stylesheet" />
 </head>
 <body>
 
@@ -17,7 +17,46 @@
 		      height="363"
 	>
 
-<p>the blog is under developing... </p>
+<p>the blog is under developing...</p>
+
+
+<p>mark-down render testing<p>
+<pre><code class="language-python">
+@jit(nopython=True)
+def sumNNi(Ri,Rj,S):
+
+    sumRiRj = np.zeros(shape=(len(Ri),len(Rj)))
+    Sx,Sy,Sz = S
+
+    for i in range(len(Ri)):
+        for j in range(len(Rj)):
+            if i + 1 < len(Ri):
+                sumRiRj[i][j] = Sx[i][j]*Sx[i+1][j] + Sy[i][j]*Sy[i+1][j] + Sz[i][j]*Sz[i+1][j] + \
+                                Sx[i][j]*Sx[i-1][j] + Sy[i][j]*Sy[i-1][j] + Sz[i][j]*Sz[i-1][j]
+            elif i + 1 >= len(Ri):
+                sumRiRj[i][j] = Sx[i][j]*Sx[i+1-len(Ri)][j] + Sy[i][j]*Sy[i+1-len(Ri)][j] + Sz[i][j]*Sz[i+1-len(Ri)][j] + \
+                                Sx[i][j]*Sx[i-1-len(Ri)][j] + Sy[i][j]*Sy[i-1-len(Ri)][j] + Sz[i][j]*Sz[i-1-len(Ri)][j]
+</code></pre>
+<pre><code class="language-wolfram">
+a = 1
+\[Phi][x_, y_, z_] := (a*Pi Exp[-Dot[{x, y}, {x, y}]/2] - Pi/2);
+V[x_, y_, z_] :=
+  Evaluate[
+   Simplify[
+    ComplexExpand[-RotationMatrix[\[Phi][x, y, z], {y, -x, 0}] . {x,
+         y, 0}/Sqrt[{x, y} . {x, y}]]]];
+V[0, 0, z_] := {0, 0, -1};
+R = Pi;
+P = Select[
+   Flatten[Table[
+     Table[{x, y, 0}, {y, -R, R, R/20}], {x, -R, R, R/20}], 1],
+   X |-> -R <= X[[1]] - X[[2]] <= R];
+P = Transpose[{{1, -1/2, 0}, {0, Sqrt[3]/2, 0}, {0, 0, 1}}.Transpose[P]];
+colfun[x_, y_, z_] := Evaluate[Simplify[ColorData["Pastel"][(Pi/2 - \[Phi][x, y, z])/Pi]]];
+arrow[p1_, p2_] := {EdgeForm[], FaceForm[colfun @@ p1], Cone[{p1, p2}, 1/24]};
+Show[Graphics3D[{arrow @@@ Transpose[{P, P + 1/4 V @@@ P}]}], PlotRange -> All, Lighting -> "Neutral", Boxed -> True]
+</code></pre>
+<script src="prism-2.js"></script>
 </body>
 </html>
 
